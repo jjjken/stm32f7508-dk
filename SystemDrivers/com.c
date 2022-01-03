@@ -30,7 +30,7 @@ void com_init(uint8_t* rx_buffer, void(*rx_callback)(void), void(*tx_callback)(v
 
     BSP_COM_Init(COM_PORT_NUMBER, &huart1);
 
-    HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(USART1_IRQn, 6, 0);
     HAL_NVIC_EnableIRQ(USART1_IRQn);
 
 }

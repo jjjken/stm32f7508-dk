@@ -30,7 +30,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdbool.h"
@@ -60,6 +59,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SD_DETECT_Pin GPIO_PIN_13
+#define SD_DETECT_GPIO_Port GPIOC
 #define LCD_BL_CTRL_Pin GPIO_PIN_3
 #define LCD_BL_CTRL_GPIO_Port GPIOK
 #define LCD_DISP_Pin GPIO_PIN_12

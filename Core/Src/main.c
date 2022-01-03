@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "fatfs.h"
 #include "app_touchgfx.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -51,9 +52,16 @@ DMA2D_HandleTypeDef hdma2d;
 
 LTDC_HandleTypeDef hltdc;
 
+SD_HandleTypeDef hsd1;
+DMA_HandleTypeDef hdma_sdmmc1_tx;
+DMA_HandleTypeDef hdma_sdmmc1_rx;
+
 //UART_HandleTypeDef huart1;
 
 SDRAM_HandleTypeDef hsdram1;
+
+void sd_test(void);
+FATFS fs;
 
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -80,8 +88,10 @@ static void MX_GPIO_Init(void);
 static void MX_CRC_Init(void);
 static void MX_DMA2D_Init(void);
 static void MX_LTDC_Init(void);
+static void MX_FMC_Init(void);
+static void MX_SDMMC1_SD_Init(void);
 //static void MX_USART1_UART_Init(void);
-//static void MX_FMC_Init(void);
+static void MX_DMA_Init(void);
 void StartDefaultTask(void *argument);
 extern void TouchGFX_Task(void *argument);
 
@@ -94,16 +104,27 @@ extern void TouchGFX_Task(void *argument);
 TaskHandle_t led1_task_handle;
 static void LED_Thread1(void const *argument)
 {
-  //const char _data_send_str[] = "Hello world2\n";
-
+	
   (void) argument;
   //uint32_t PreviousWakeTime = osKernelSysTick();
   static uint8_t cnt = 0;
 
   uint8_t rx_data[10];
-  float _test = 1.123456;
+  float _test = 1.1651;
 	
 	BSP_LED_Init(LED1);
+	
+	FRESULT res;
+	char SDPath[4] = {0};       /* SD card logical drive path */
+	DEBUG_MSG("Ready!\r\n");
+	
+	res = f_mount(&fs, SDPath, 0);
+	if(res != FR_OK) {
+			DEBUG_MSG("f_mount() failed, res = %d\r\n", res);
+			return;
+	}
+
+	DEBUG_MSG("f_mount() done!\r\n");
   
   for(;;)
   {
@@ -122,10 +143,149 @@ static void LED_Thread1(void const *argument)
 			if(rx_data[0] != NULL){
 				DEBUG_MSG("%s\r\n", (char*)rx_data);
 				memset(rx_data, 0, 10);
+				
 			}
       cnt = 0;
+			
+			sd_test();
     }
   }
+}
+
+void sd_test(void){
+//	FATFS fs;
+	FRESULT res;
+
+//	uint32_t freeClust;
+//	FATFS* fs_ptr = &fs;
+//	res = f_getfree("", &freeClust, &fs_ptr); // Warning! This fills fs.n_fatent and fs.csize!
+//	if(res != FR_OK) {
+//			DEBUG_MSG("f_getfree() failed, res = %d\r\n", res);
+//			return;
+//	}
+//	
+//	DEBUG_MSG("f_getfree() done!\r\n");
+//	uint32_t totalBlocks = (fs.n_fatent - 2) * fs.csize;
+//	uint32_t freeBlocks = freeClust * fs.csize;
+
+//	DEBUG_MSG("Total blocks: %lu (%lu Mb)\r\n", totalBlocks, totalBlocks / 2000);
+//	DEBUG_MSG("Free blocks: %lu (%lu Mb)\r\n", freeBlocks, freeBlocks / 2000);
+	
+//	FIL logFile;
+//	writeBuff[] = "Hello World\n";
+//	res = f_open(&logFile, "log.txt", FA_OPEN_APPEND | FA_WRITE);
+//	if(res != FR_OK) {
+//			DEBUG_MSG("f_open() failed, res = %d\r\n", res);
+//			return;
+//	}
+
+///////////////////////////////////////////////////
+//	unsigned int bytesToWrite = strlen(writeBuff);
+//	unsigned int bytesWritten;
+//	res = f_write(&logFile, writeBuff, bytesToWrite, &bytesWritten);
+//	if(res != FR_OK) {
+//			DEBUG_MSG("f_write() failed, res = %d\r\n", res);
+//			return;
+//	}
+
+//	if(bytesWritten < bytesToWrite) {
+//			DEBUG_MSG("WARNING! Disk is full, bytesToWrite = %lu, bytesWritten = %lu\r\n", bytesToWrite, bytesWritten);
+//	}
+
+//	res = f_close(&logFile);
+//	if(res != FR_OK) {
+//			DEBUG_MSG("f_close() failed, res = %d\r\n", res);
+//			return;
+//	}
+///////////////////////////////////////////////////
+		
+    DIR dir;
+    res = f_opendir(&dir, "/");
+    if(res != FR_OK) {
+        DEBUG_MSG("f_opendir() failed, res = %d\r\n", res);
+        return;
+    }
+
+    FILINFO fileInfo;
+    uint32_t totalFiles = 0;
+    uint32_t totalDirs = 0;
+    DEBUG_MSG("--------\r\nRoot directory:\r\n");
+    for(;;) {
+        res = f_readdir(&dir, &fileInfo);
+        if((res != FR_OK) || (fileInfo.fname[0] == '\0')) {
+            break;
+        }
+        
+        if(fileInfo.fattrib & AM_DIR) {
+            DEBUG_MSG("  DIR  %s\r\n", fileInfo.fname);
+            totalDirs++;
+        } else {
+            DEBUG_MSG("  FILE %s\r\n", fileInfo.fname);
+            totalFiles++;
+        }
+    }
+
+    DEBUG_MSG("(total: %lu dirs, %lu files)\r\n--------\r\n", totalDirs, totalFiles);
+
+    res = f_closedir(&dir);
+    if(res != FR_OK) {
+        DEBUG_MSG("f_closedir() failed, res = %d\r\n", res);
+        return;
+    }
+		
+		FIL logFile;
+		char writeBuff[] = "Hello World\n";
+    res = f_open(&logFile, "test.txt", FA_OPEN_APPEND | FA_WRITE);
+    if(res != FR_OK) {
+        DEBUG_MSG("f_open() failed, res = %d\r\n", res);
+        return;
+    }
+
+    unsigned int bytesToWrite = strlen(writeBuff);
+    unsigned int bytesWritten;
+    res = f_write(&logFile, writeBuff, bytesToWrite, &bytesWritten);
+    if(res != FR_OK) {
+        DEBUG_MSG("f_write() failed, res = %d\r\n", res);
+        return;
+    }
+
+    if(bytesWritten < bytesToWrite) {
+        DEBUG_MSG("WARNING! Disk is full, bytesToWrite = %lu, bytesWritten = %lu\r\n", bytesToWrite, bytesWritten);
+    }
+
+    res = f_close(&logFile);
+    if(res != FR_OK) {
+        DEBUG_MSG("f_close() failed, res = %d\r\n", res);
+        return;
+    }
+		
+		
+		DEBUG_MSG("Reading file...\r\n");
+    FIL msgFile;
+    res = f_open(&msgFile, "test.txt", FA_READ);
+    if(res != FR_OK) {
+        DEBUG_MSG("f_open() failed, res = %d\r\n", res);
+        return;
+    }
+
+    char readBuff[128];
+    unsigned int bytesRead;
+    res = f_read(&msgFile, readBuff, sizeof(readBuff)-1, &bytesRead);
+    if(res != FR_OK) {
+        DEBUG_MSG("f_read() failed, res = %d\r\n", res);
+        return;
+    }
+
+    readBuff[bytesRead] = '\0';
+    DEBUG_MSG("```\r\n%s\r\n```\r\n", readBuff);
+
+    res = f_close(&msgFile);
+    if(res != FR_OK) {
+        DEBUG_MSG("f_close() failed, res = %d\r\n", res);
+        return;
+    }
+
+
 }
 /* USER CODE END 0 */
 
@@ -169,11 +329,14 @@ int main(void)
   MX_CRC_Init();
   MX_DMA2D_Init();
   MX_LTDC_Init();
-  //MX_USART1_UART_Init();
   //MX_FMC_Init();
+  MX_SDMMC1_SD_Init();
+  MX_FATFS_Init();
+  //MX_USART1_UART_Init();
+  //MX_DMA_Init();
   MX_TouchGFX_Init();
   /* USER CODE BEGIN 2 */
-
+	//BSP_SD_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -189,6 +352,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
+	
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -204,18 +368,20 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_THREADS */
 	serial_task_start();
-  xTaskCreate((TaskFunction_t)LED_Thread1, "led1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &led1_task_handle);
+  xTaskCreate((TaskFunction_t)LED_Thread1, "led1", (configMINIMAL_STACK_SIZE * 12), NULL, tskIDLE_PRIORITY, &led1_task_handle);
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
+	//sd_test();
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
   osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
+	
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -251,7 +417,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 25;
   RCC_OscInitStruct.PLL.PLLN = 432;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 2;
+  RCC_OscInitStruct.PLL.PLLQ = 12;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -275,7 +441,8 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC|RCC_PERIPHCLK_USART1;
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC|RCC_PERIPHCLK_USART1
+                              |RCC_PERIPHCLK_SDMMC1|RCC_PERIPHCLK_CLK48;
   PeriphClkInitStruct.PLLSAI.PLLSAIN = 100;
   PeriphClkInitStruct.PLLSAI.PLLSAIR = 5;
   PeriphClkInitStruct.PLLSAI.PLLSAIQ = 2;
@@ -283,6 +450,8 @@ void SystemClock_Config(void)
   PeriphClkInitStruct.PLLSAIDivQ = 1;
   PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_2;
   PeriphClkInitStruct.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
+  PeriphClkInitStruct.Clk48ClockSelection = RCC_CLK48SOURCE_PLL;
+  PeriphClkInitStruct.Sdmmc1ClockSelection = RCC_SDMMC1CLKSOURCE_CLK48;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -420,6 +589,34 @@ static void MX_LTDC_Init(void)
 }
 
 /**
+  * @brief SDMMC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SDMMC1_SD_Init(void)
+{
+
+  /* USER CODE BEGIN SDMMC1_Init 0 */
+
+  /* USER CODE END SDMMC1_Init 0 */
+
+  /* USER CODE BEGIN SDMMC1_Init 1 */
+
+  /* USER CODE END SDMMC1_Init 1 */
+  hsd1.Instance = SDMMC1;
+  hsd1.Init.ClockEdge = SDMMC_CLOCK_EDGE_RISING;
+  hsd1.Init.ClockBypass = SDMMC_CLOCK_BYPASS_DISABLE;
+  hsd1.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_DISABLE;
+  hsd1.Init.BusWide = SDMMC_BUS_WIDE_1B;
+  hsd1.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
+  hsd1.Init.ClockDiv = 1;
+  /* USER CODE BEGIN SDMMC1_Init 2 */
+
+  /* USER CODE END SDMMC1_Init 2 */
+
+}
+
+/**
   * @brief USART1 Initialization Function
   * @param None
   * @retval None
@@ -454,52 +651,71 @@ static void MX_LTDC_Init(void)
 
 //}
 
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA2_Stream3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+  /* DMA2_Stream6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
+
+}
+
 /* FMC initialization function */
-//static void MX_FMC_Init(void)
-//{
+static void MX_FMC_Init(void)
+{
 
-//  /* USER CODE BEGIN FMC_Init 0 */
+  /* USER CODE BEGIN FMC_Init 0 */
 
-//  /* USER CODE END FMC_Init 0 */
+  /* USER CODE END FMC_Init 0 */
 
-//  FMC_SDRAM_TimingTypeDef SdramTiming = {0};
+  FMC_SDRAM_TimingTypeDef SdramTiming = {0};
 
-//  /* USER CODE BEGIN FMC_Init 1 */
+  /* USER CODE BEGIN FMC_Init 1 */
 
-//  /* USER CODE END FMC_Init 1 */
+  /* USER CODE END FMC_Init 1 */
 
-//  /** Perform the SDRAM1 memory initialization sequence
-//  */
-//  hsdram1.Instance = FMC_SDRAM_DEVICE;
-//  /* hsdram1.Init */
-//  hsdram1.Init.SDBank = FMC_SDRAM_BANK1;
-//  hsdram1.Init.ColumnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_8;
-//  hsdram1.Init.RowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_12;
-//  hsdram1.Init.MemoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
-//  hsdram1.Init.InternalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
-//  hsdram1.Init.CASLatency = FMC_SDRAM_CAS_LATENCY_1;
-//  hsdram1.Init.WriteProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
-//  hsdram1.Init.SDClockPeriod = FMC_SDRAM_CLOCK_DISABLE;
-//  hsdram1.Init.ReadBurst = FMC_SDRAM_RBURST_DISABLE;
-//  hsdram1.Init.ReadPipeDelay = FMC_SDRAM_RPIPE_DELAY_0;
-//  /* SdramTiming */
-//  SdramTiming.LoadToActiveDelay = 16;
-//  SdramTiming.ExitSelfRefreshDelay = 16;
-//  SdramTiming.SelfRefreshTime = 16;
-//  SdramTiming.RowCycleDelay = 16;
-//  SdramTiming.WriteRecoveryTime = 16;
-//  SdramTiming.RPDelay = 16;
-//  SdramTiming.RCDDelay = 16;
+  /** Perform the SDRAM1 memory initialization sequence
+  */
+  hsdram1.Instance = FMC_SDRAM_DEVICE;
+  /* hsdram1.Init */
+  hsdram1.Init.SDBank = FMC_SDRAM_BANK1;
+  hsdram1.Init.ColumnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_8;
+  hsdram1.Init.RowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_12;
+  hsdram1.Init.MemoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
+  hsdram1.Init.InternalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
+  hsdram1.Init.CASLatency = FMC_SDRAM_CAS_LATENCY_1;
+  hsdram1.Init.WriteProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
+  hsdram1.Init.SDClockPeriod = FMC_SDRAM_CLOCK_DISABLE;
+  hsdram1.Init.ReadBurst = FMC_SDRAM_RBURST_DISABLE;
+  hsdram1.Init.ReadPipeDelay = FMC_SDRAM_RPIPE_DELAY_0;
+  /* SdramTiming */
+  SdramTiming.LoadToActiveDelay = 16;
+  SdramTiming.ExitSelfRefreshDelay = 16;
+  SdramTiming.SelfRefreshTime = 16;
+  SdramTiming.RowCycleDelay = 16;
+  SdramTiming.WriteRecoveryTime = 16;
+  SdramTiming.RPDelay = 16;
+  SdramTiming.RCDDelay = 16;
 
-//  if (HAL_SDRAM_Init(&hsdram1, &SdramTiming) != HAL_OK)
-//  {
-//    Error_Handler( );
-//  }
+  if (HAL_SDRAM_Init(&hsdram1, &SdramTiming) != HAL_OK)
+  {
+    Error_Handler( );
+  }
 
-//  /* USER CODE BEGIN FMC_Init 2 */
+  /* USER CODE BEGIN FMC_Init 2 */
 
-//  /* USER CODE END FMC_Init 2 */
-//}
+  /* USER CODE END FMC_Init 2 */
+}
 
 /**
   * @brief GPIO Initialization Function
@@ -512,6 +728,7 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOJ_CLK_ENABLE();
@@ -521,13 +738,18 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOI_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LCD_BL_CTRL_GPIO_Port, LCD_BL_CTRL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LCD_DISP_GPIO_Port, LCD_DISP_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : SD_DETECT_Pin */
+  GPIO_InitStruct.Pin = SD_DETECT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(SD_DETECT_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LCD_BL_CTRL_Pin */
   GPIO_InitStruct.Pin = LCD_BL_CTRL_Pin;
