@@ -36,6 +36,14 @@ SubScreenViewBase::SubScreenViewBase() :
     buttonWithLabel1.setLabelText(touchgfx::TypedText(T___SINGLEUSE_4501));
     buttonWithLabel1.setLabelColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     buttonWithLabel1.setLabelColorPressed(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    buttonWithLabel1.setAction(buttonCallback);
+
+    TestButton.setXY(17, 161);
+    TestButton.setBitmaps(touchgfx::Bitmap(BITMAP_BLUE_BUTTONS_ROUND_EDGE_SMALL_ID), touchgfx::Bitmap(BITMAP_BLUE_BUTTONS_ROUND_EDGE_SMALL_PRESSED_ID));
+    TestButton.setLabelText(touchgfx::TypedText(T___SINGLEUSE_HGQY));
+    TestButton.setLabelColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    TestButton.setLabelColorPressed(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    TestButton.setAction(buttonCallback);
 
     add(__background);
     add(background);
@@ -43,6 +51,7 @@ SubScreenViewBase::SubScreenViewBase() :
     add(textArea1);
     add(textArea2);
     add(buttonWithLabel1);
+    add(TestButton);
 }
 
 void SubScreenViewBase::setupScreen()
@@ -58,5 +67,19 @@ void SubScreenViewBase::buttonCallbackHandler(const touchgfx::AbstractButton& sr
         //When button1 clicked change screen to Main
         //Go to Main with no screen transition
         application().gotoMainScreenNoTransition();
+    }
+    else if (&src == &buttonWithLabel1)
+    {
+        //Interaction2
+        //When buttonWithLabel1 clicked change screen to Screen1
+        //Go to Screen1 with no screen transition
+        application().gotoScreen1ScreenNoTransition();
+    }
+    else if (&src == &TestButton)
+    {
+        //Interaction3
+        //When TestButton clicked call virtual function
+        //Call TestButtonCallback
+        TestButtonCallback();
     }
 }

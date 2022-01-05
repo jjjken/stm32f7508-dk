@@ -253,4 +253,4 @@ void USART1_IRQHandler(void)
   HAL_UART_IRQHandler(&huart1);
 }
 /* USER CODE END 1 */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+

@@ -21,6 +21,9 @@ public:
     // SubScreen
     void gotoSubScreenScreenNoTransition();
 
+    // Screen1
+    void gotoScreen1ScreenNoTransition();
+
 protected:
     touchgfx::Callback<FrontendApplicationBase> transitionCallback;
     FrontendHeap& frontendHeap;
@@ -31,6 +34,9 @@ protected:
 
     // SubScreen
     void gotoSubScreenScreenNoTransitionImpl();
+
+    // Screen1
+    void gotoScreen1ScreenNoTransitionImpl();
 };
 
 #endif // FRONTENDAPPLICATIONBASE_HPP

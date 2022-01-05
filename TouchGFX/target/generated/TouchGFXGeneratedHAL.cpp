@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2022 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -21,6 +20,21 @@
 #include <touchgfx/hal/OSWrappers.hpp>
 #include <gui/common/FrontendHeap.hpp>
 #include <touchgfx/hal/GPIO.hpp>
+
+#include <DirectFrameBufferVideoController.hpp>
+
+#include <SoftwareMJPEGDecoder.hpp>
+uint32_t lineBuffer[480];
+
+SoftwareMJPEGDecoder mjpegdecoder1((uint8_t*)lineBuffer);
+
+DirectFrameBufferVideoController<1, Bitmap::RGB565> videoController;
+
+//Singleton Factory
+VideoController& VideoController::getInstance()
+{
+    return videoController;
+}
 
 #include "stm32f7xx.h"
 #include "stm32f7xx_hal_ltdc.h"
@@ -38,6 +52,12 @@ void TouchGFXGeneratedHAL::initialize()
     HAL::initialize();
     registerEventListener(*(Application::getInstance()));
     setFrameBufferStartAddresses((void*)0xC0000000, (void*)0xC003FC00, (void*)0);
+
+    /*
+     * Add software decoder to video controller
+     */
+    videoController.addDecoder(mjpegdecoder1, 0);
+
 }
 
 void TouchGFXGeneratedHAL::configureInterrupts()

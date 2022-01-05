@@ -11,6 +11,7 @@ public:
     virtual ~SubScreenView() {}
     virtual void setupScreen();
     virtual void tearDownScreen();
+		virtual void TestButtonCallback();
 protected:
 };
 

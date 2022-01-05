@@ -76,4 +76,3 @@ __weak void vApplicationIdleHook( void )
      
 /* USER CODE END Application */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

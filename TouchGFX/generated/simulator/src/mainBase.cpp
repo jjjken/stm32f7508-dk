@@ -5,12 +5,47 @@
 #include <platform/hal/simulator/sdl2/HALSDL2.hpp>
 #include <common/TouchGFXInit.hpp>
 #include <platform/driver/lcd/LCD16bpp.hpp>
+#include <simulator/video/DirectFrameBufferVideoController.hpp>
+#include <simulator/video/SoftwareMJPEGDecoder.hpp>
+#include <videos/VideoDatabase.hpp>
 #include <string.h>
 
 #ifdef __GNUC__
 #define fopen_s(pFile, filename, mode) (((*(pFile)) = fopen((filename), (mode))) == NULL)
 #endif
 touchgfx::LCD16bpp lcd;
+const uint8_t* video_SampleVideo1_240x135_bin_start;
+
+uint32_t lineBuffer[10000];
+SoftwareMJPEGDecoder *mjpegDecoders[1];
+DirectFrameBufferVideoController<1, Bitmap::RGB565> controller;
+
+VideoController& VideoController::getInstance()
+{
+    return controller;
+}
+
+void setupVideoDecoder(touchgfx::HAL& hal)
+{
+    for(int i = 0; i < 1; i++)
+    {
+        mjpegDecoders[i] = new SoftwareMJPEGDecoder((uint8_t*)lineBuffer);
+        controller.addDecoder(*mjpegDecoders[i], i);
+    }
+
+    char videoFileName[400];
+    setupVideo(static_cast<touchgfx::HALSDL2&>(hal).localFileName(videoFileName, 400, "SampleVideo1_240x135.bin"), &video_SampleVideo1_240x135_bin_start, video_SampleVideo1_240x135_bin_length);
+}
+
+void setupVideo(const char* videoFileName, const uint8_t** videoBuffer, uint32_t videoLength)
+{
+    FILE *file = 0;
+    fopen_s(&file, videoFileName, "rb");
+    assert(file && "Unable to setupVideo.");
+    *videoBuffer = (uint8_t*) malloc(videoLength + 1);
+    fread(const_cast<uint8_t*>(*videoBuffer), 1, videoLength, file);
+    fclose(file);
+}
 
 void setupSimulator(int argc, char** argv, touchgfx::HAL& hal)
 {
@@ -21,6 +56,8 @@ void setupSimulator(int argc, char** argv, touchgfx::HAL& hal)
     // Initialize SDL
     bool sdl_init_result = static_cast<touchgfx::HALSDL2&>(hal).sdl_init(argc, argv);
     assert(sdl_init_result && "Error during SDL initialization");
+
+    setupVideoDecoder(hal);
 }
 
 touchgfx::LCD& setupLCD()

@@ -16,6 +16,8 @@
 #include <gui/main_screen/MainPresenter.hpp>
 #include <gui/subscreen_screen/SubScreenView.hpp>
 #include <gui/subscreen_screen/SubScreenPresenter.hpp>
+#include <gui/screen1_screen/Screen1View.hpp>
+#include <gui/screen1_screen/Screen1Presenter.hpp>
 
 
 /**
@@ -40,7 +42,8 @@ public:
      */
     typedef touchgfx::meta::TypeList< MainView,
             touchgfx::meta::TypeList< SubScreenView,
-            touchgfx::meta::Nil >
+            touchgfx::meta::TypeList< Screen1View,
+            touchgfx::meta::Nil > >
             > GeneratedViewTypes;
 
     /**
@@ -54,7 +57,8 @@ public:
      */
     typedef touchgfx::meta::TypeList< MainPresenter,
             touchgfx::meta::TypeList< SubScreenPresenter,
-            touchgfx::meta::Nil >
+            touchgfx::meta::TypeList< Screen1Presenter,
+            touchgfx::meta::Nil > >
             > GeneratedPresenterTypes;
 
     /**
