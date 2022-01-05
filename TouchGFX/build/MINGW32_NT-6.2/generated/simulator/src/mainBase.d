@@ -85,9 +85,22 @@ build/MINGW32_NT-6.2/generated/simulator/src/mainBase.o: \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/TextureMapper.hpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Button.hpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/AbstractButton.hpp \
+ gui/include/gui/subscreen_screen/SubScreenView.hpp \
+ generated/gui_generated/include/gui_generated/subscreen_screen/SubScreenViewBase.hpp \
+ gui/include/gui/subscreen_screen/SubScreenPresenter.hpp \
+ ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/ButtonWithLabel.hpp \
+ gui/include/gui/screenvideo_screen/ScreenVideoView.hpp \
+ generated/gui_generated/include/gui_generated/screenvideo_screen/ScreenVideoViewBase.hpp \
+ gui/include/gui/screenvideo_screen/ScreenVideoPresenter.hpp \
+ ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/VideoWidget.hpp \
+ ../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/VideoController.hpp \
  ../Middlewares/ST/touchgfx/framework/include/platform/driver/lcd/LCD16bpp.hpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/Color.hpp \
- ../Middlewares/ST/touchgfx/framework/include/touchgfx/lcd/LCD16DebugPrinter.hpp
+ ../Middlewares/ST/touchgfx/framework/include/touchgfx/lcd/LCD16DebugPrinter.hpp \
+ generated/simulator/include/simulator/video/DirectFrameBufferVideoController.hpp \
+ generated/simulator/include/simulator/video/MJPEGDecoder.hpp \
+ generated/simulator/include/simulator/video/SoftwareMJPEGDecoder.hpp \
+ generated/videos/include/videos/VideoDatabase.hpp
 
 generated/simulator/include/simulator/mainBase.hpp:
 
@@ -259,8 +272,34 @@ gui/include/gui/model/ModelListener.hpp:
 
 ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/AbstractButton.hpp:
 
+gui/include/gui/subscreen_screen/SubScreenView.hpp:
+
+generated/gui_generated/include/gui_generated/subscreen_screen/SubScreenViewBase.hpp:
+
+gui/include/gui/subscreen_screen/SubScreenPresenter.hpp:
+
+../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/ButtonWithLabel.hpp:
+
+gui/include/gui/screenvideo_screen/ScreenVideoView.hpp:
+
+generated/gui_generated/include/gui_generated/screenvideo_screen/ScreenVideoViewBase.hpp:
+
+gui/include/gui/screenvideo_screen/ScreenVideoPresenter.hpp:
+
+../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/VideoWidget.hpp:
+
+../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/VideoController.hpp:
+
 ../Middlewares/ST/touchgfx/framework/include/platform/driver/lcd/LCD16bpp.hpp:
 
 ../Middlewares/ST/touchgfx/framework/include/touchgfx/Color.hpp:
 
 ../Middlewares/ST/touchgfx/framework/include/touchgfx/lcd/LCD16DebugPrinter.hpp:
+
+generated/simulator/include/simulator/video/DirectFrameBufferVideoController.hpp:
+
+generated/simulator/include/simulator/video/MJPEGDecoder.hpp:
+
+generated/simulator/include/simulator/video/SoftwareMJPEGDecoder.hpp:
+
+generated/videos/include/videos/VideoDatabase.hpp:

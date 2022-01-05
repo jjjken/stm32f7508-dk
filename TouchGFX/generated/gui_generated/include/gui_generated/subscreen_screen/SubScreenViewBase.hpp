@@ -11,6 +11,7 @@
 #include <touchgfx/widgets/TiledImage.hpp>
 #include <touchgfx/widgets/Button.hpp>
 #include <touchgfx/widgets/TextArea.hpp>
+#include <touchgfx/widgets/ButtonWithLabel.hpp>
 
 class SubScreenViewBase : public touchgfx::View<SubScreenPresenter>
 {
@@ -32,6 +33,7 @@ protected:
     touchgfx::Button button1;
     touchgfx::TextArea textArea1;
     touchgfx::TextArea textArea2;
+    touchgfx::ButtonWithLabel buttonWithLabel1;
 
 private:
 

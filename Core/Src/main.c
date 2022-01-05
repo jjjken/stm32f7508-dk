@@ -28,11 +28,12 @@
 #include "stm32f7508_discovery_sdram.h"
 #include "stm32f7508_discovery.h"
 #include "serial_task.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+void main_task_start(void);
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -59,9 +60,6 @@ DMA_HandleTypeDef hdma_sdmmc1_rx;
 //UART_HandleTypeDef huart1;
 
 SDRAM_HandleTypeDef hsdram1;
-
-void sd_test(void);
-FATFS fs;
 
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -114,17 +112,17 @@ static void LED_Thread1(void const *argument)
 	
 	BSP_LED_Init(LED1);
 	
-	FRESULT res;
-	char SDPath[4] = {0};       /* SD card logical drive path */
-	DEBUG_MSG("Ready!\r\n");
-	
-	res = f_mount(&fs, SDPath, 0);
-	if(res != FR_OK) {
-			DEBUG_MSG("f_mount() failed, res = %d\r\n", res);
-			return;
-	}
+//	FRESULT res;
+//	char SDPath[4] = {0};       /* SD card logical drive path */
+//	DEBUG_MSG("Ready!\r\n");
+//	
+//	res = f_mount(&fs, SDPath, 0);
+//	if(res != FR_OK) {
+//			DEBUG_MSG("f_mount() failed, res = %d\r\n", res);
+//			return;
+//	}
 
-	DEBUG_MSG("f_mount() done!\r\n");
+//	DEBUG_MSG("f_mount() done!\r\n");
   
   for(;;)
   {
@@ -133,21 +131,9 @@ static void LED_Thread1(void const *argument)
 
     if(cnt++ == 5){
 			
-			DEBUG_MSG("%f\n", _test);
-			
-      for(uint8_t i=0; i<10; i++){
-        if(serial_getbyte(&rx_data[i]) == 0)
-          break;
-      }
-			
-			if(rx_data[0] != NULL){
-				DEBUG_MSG("%s\r\n", (char*)rx_data);
-				memset(rx_data, 0, 10);
-				
-			}
       cnt = 0;
 			
-			sd_test();
+			//sd_test();
     }
   }
 }
@@ -333,7 +319,7 @@ int main(void)
   MX_SDMMC1_SD_Init();
   MX_FATFS_Init();
   //MX_USART1_UART_Init();
-  //MX_DMA_Init();
+  MX_DMA_Init();
   MX_TouchGFX_Init();
   /* USER CODE BEGIN 2 */
 	//BSP_SD_Init();
@@ -367,7 +353,8 @@ int main(void)
   TouchGFXTaskHandle = osThreadNew(TouchGFX_Task, NULL, &TouchGFXTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
-	serial_task_start();
+	//serial_task_start();
+	main_task_start();
   xTaskCreate((TaskFunction_t)LED_Thread1, "led1", (configMINIMAL_STACK_SIZE * 12), NULL, tskIDLE_PRIORITY, &led1_task_handle);
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -381,7 +368,6 @@ int main(void)
   osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
-	
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

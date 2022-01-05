@@ -215,14 +215,23 @@ size_t serial_getbytes(uint8_t* pData, uint16_t size){
     return _number_to_read;
 }
 
+void serial_clear_tx_buffer(void){
+
+	xStreamBufferReset(_serial_msg_tx_stream_handle);
+}
+
 /**
  * @brief  Get number of bytes in the RX buffer
  * 
  * @return size_t   number of bytes in the RX buffer
  */
-size_t serial_avaiable_bytes(void){
+size_t serial_available_bytes(void){
 
-    return xStreamBufferBytesAvailable(_serial_msg_rx_stream_handle);
+		return xStreamBufferBytesAvailable(_serial_msg_rx_stream_handle);
+}
+
+size_t serial_available_bytes_for_write(void){
+		return xStreamBufferBytesAvailable(_serial_msg_tx_stream_handle);
 }
 
 static void uart_rx_callback(void){

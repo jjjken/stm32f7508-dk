@@ -31,11 +31,18 @@ SubScreenViewBase::SubScreenViewBase() :
     textArea2.setLinespacing(0);
     textArea2.setTypedText(touchgfx::TypedText(T___SINGLEUSE_U59A));
 
+    buttonWithLabel1.setXY(17, 88);
+    buttonWithLabel1.setBitmaps(touchgfx::Bitmap(BITMAP_BLUE_BUTTONS_ROUND_EDGE_SMALL_ID), touchgfx::Bitmap(BITMAP_BLUE_BUTTONS_ROUND_EDGE_SMALL_PRESSED_ID));
+    buttonWithLabel1.setLabelText(touchgfx::TypedText(T___SINGLEUSE_4501));
+    buttonWithLabel1.setLabelColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    buttonWithLabel1.setLabelColorPressed(touchgfx::Color::getColorFromRGB(255, 255, 255));
+
     add(__background);
     add(background);
     add(button1);
     add(textArea1);
     add(textArea2);
+    add(buttonWithLabel1);
 }
 
 void SubScreenViewBase::setupScreen()

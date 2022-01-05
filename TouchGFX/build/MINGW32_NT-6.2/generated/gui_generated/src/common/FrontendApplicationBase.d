@@ -63,6 +63,15 @@ build/MINGW32_NT-6.2/generated/gui_generated/src/common/FrontendApplicationBase.
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/TextureMapper.hpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Button.hpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/AbstractButton.hpp \
+ gui/include/gui/subscreen_screen/SubScreenView.hpp \
+ generated/gui_generated/include/gui_generated/subscreen_screen/SubScreenViewBase.hpp \
+ gui/include/gui/subscreen_screen/SubScreenPresenter.hpp \
+ ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/ButtonWithLabel.hpp \
+ gui/include/gui/screenvideo_screen/ScreenVideoView.hpp \
+ generated/gui_generated/include/gui_generated/screenvideo_screen/ScreenVideoViewBase.hpp \
+ gui/include/gui/screenvideo_screen/ScreenVideoPresenter.hpp \
+ ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/VideoWidget.hpp \
+ ../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/VideoController.hpp \
  generated/texts/include/texts/TextKeysAndLanguages.hpp \
  ../Middlewares/ST/touchgfx/framework/include/platform/driver/lcd/LCD16bpp.hpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/Color.hpp \
@@ -193,6 +202,24 @@ gui/include/gui/model/ModelListener.hpp:
 ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Button.hpp:
 
 ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/AbstractButton.hpp:
+
+gui/include/gui/subscreen_screen/SubScreenView.hpp:
+
+generated/gui_generated/include/gui_generated/subscreen_screen/SubScreenViewBase.hpp:
+
+gui/include/gui/subscreen_screen/SubScreenPresenter.hpp:
+
+../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/ButtonWithLabel.hpp:
+
+gui/include/gui/screenvideo_screen/ScreenVideoView.hpp:
+
+generated/gui_generated/include/gui_generated/screenvideo_screen/ScreenVideoViewBase.hpp:
+
+gui/include/gui/screenvideo_screen/ScreenVideoPresenter.hpp:
+
+../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/VideoWidget.hpp:
+
+../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/VideoController.hpp:
 
 generated/texts/include/texts/TextKeysAndLanguages.hpp:
 

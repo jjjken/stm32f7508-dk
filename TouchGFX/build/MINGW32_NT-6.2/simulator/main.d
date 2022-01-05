@@ -84,6 +84,15 @@ build/MINGW32_NT-6.2/simulator/main.o: simulator/main.cpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/TextureMapper.hpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Button.hpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/AbstractButton.hpp \
+ gui/include/gui/subscreen_screen/SubScreenView.hpp \
+ generated/gui_generated/include/gui_generated/subscreen_screen/SubScreenViewBase.hpp \
+ gui/include/gui/subscreen_screen/SubScreenPresenter.hpp \
+ ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/ButtonWithLabel.hpp \
+ gui/include/gui/screenvideo_screen/ScreenVideoView.hpp \
+ generated/gui_generated/include/gui_generated/screenvideo_screen/ScreenVideoViewBase.hpp \
+ gui/include/gui/screenvideo_screen/ScreenVideoPresenter.hpp \
+ ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/VideoWidget.hpp \
+ ../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/VideoController.hpp \
  generated/gui_generated/include/gui_generated/common/SimConstants.hpp \
  ../Middlewares/ST/touchgfx/framework/include/platform/driver/touch/SDL2TouchController.hpp \
  generated/simulator/include/simulator/mainBase.hpp
@@ -257,6 +266,24 @@ gui/include/gui/model/ModelListener.hpp:
 ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Button.hpp:
 
 ../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/AbstractButton.hpp:
+
+gui/include/gui/subscreen_screen/SubScreenView.hpp:
+
+generated/gui_generated/include/gui_generated/subscreen_screen/SubScreenViewBase.hpp:
+
+gui/include/gui/subscreen_screen/SubScreenPresenter.hpp:
+
+../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/ButtonWithLabel.hpp:
+
+gui/include/gui/screenvideo_screen/ScreenVideoView.hpp:
+
+generated/gui_generated/include/gui_generated/screenvideo_screen/ScreenVideoViewBase.hpp:
+
+gui/include/gui/screenvideo_screen/ScreenVideoPresenter.hpp:
+
+../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/VideoWidget.hpp:
+
+../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/VideoController.hpp:
 
 generated/gui_generated/include/gui_generated/common/SimConstants.hpp:
 

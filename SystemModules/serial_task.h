@@ -20,7 +20,10 @@ int serial_putbyte(uint8_t _b);
 int serial_putbytes(uint8_t* pData, uint16_t size);
 size_t serial_getbyte(uint8_t* pData);
 size_t serial_getbytes(uint8_t* pData, uint16_t size);
-size_t serial_avaiable_bytes(void);
+size_t serial_available_bytes(void);
+size_t serial_available_bytes_for_write(void);
+
+void serial_clear_tx_buffer(void);
 
 #ifdef __cplusplus
 }

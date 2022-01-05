@@ -20,6 +20,7 @@ void MainView::setupScreen()
 void MainView::tearDownScreen()
 {
     MainViewBase::tearDownScreen();
+
 }
 
 void MainView::handleTickEvent()

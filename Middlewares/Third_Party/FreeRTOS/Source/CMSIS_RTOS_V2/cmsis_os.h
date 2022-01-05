@@ -125,8 +125,10 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 #include "queue.h"
 #include "semphr.h"
+#include "event_groups.h"
 #include "stream_buffer.h"
 
 #define RTOS_ID_n             ((tskKERNEL_VERSION_MAJOR << 16) | (tskKERNEL_VERSION_MINOR))

@@ -13,6 +13,9 @@
     <Text Id="__SingleUse_U59A" TypographyId="DigitalClock" Alignment="Left" Direction="LTR">
       <Translation Language="GB">Previous</Translation>
     </Text>
+    <Text Id="__SingleUse_4501" TypographyId="DigitalClock" Alignment="Center" Direction="LTR">
+      <Translation Language="GB">Next</Translation>
+    </Text>
   </Texts>
   <Typographies>
     <Typography Id="DigitalClock" Font="Asap-Regular.ttf" Size="24" Bpp="4" WildcardCharacters="APM :" WidgetWildcardCharacters="0123456789 :APM" WildcardCharacterRanges="0-9" />
