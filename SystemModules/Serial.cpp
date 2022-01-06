@@ -69,6 +69,9 @@ int Serial::println(std::string msg){
 }
 int Serial::println(uint8_t data){
 	if(isBegin){
+		memset(sendBuf, 0, sizeof(sendBuf));
+		sprintf(sendBuf, "%u", data);
+		
 		serial_putbyte(data);
 		serial_putbyte('\n');
 		return 2;
@@ -101,9 +104,14 @@ int Serial::println(int data){
 	
 int Serial::write(uint8_t data){
 	
+	
 }
 int Serial::write(std::string str){}
-int Serial::write(uint8_t* pData, uint16_t len){}
+	
+int Serial::write(uint8_t* pData, uint16_t len){
+	serial_putbytes((uint8_t*)pData, len);
+	return len;
+}
 	
 uint8_t Serial::read(void){}
 uint8_t Serial::readBytes(uint8_t* pBuf, uint16_t len){}

@@ -22,6 +22,7 @@
 #include "cmsis_os.h"
 #include "fatfs.h"
 #include "libjpeg.h"
+#include "lwip.h"
 #include "app_touchgfx.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -58,7 +59,7 @@ SD_HandleTypeDef hsd1;
 DMA_HandleTypeDef hdma_sdmmc1_tx;
 DMA_HandleTypeDef hdma_sdmmc1_rx;
 
-//UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart1;
 
 SDRAM_HandleTypeDef hsdram1;
 
@@ -89,7 +90,7 @@ static void MX_DMA2D_Init(void);
 static void MX_LTDC_Init(void);
 static void MX_FMC_Init(void);
 static void MX_SDMMC1_SD_Init(void);
-//static void MX_USART1_UART_Init(void);
+static void MX_USART1_UART_Init(void);
 static void MX_DMA_Init(void);
 void StartDefaultTask(void *argument);
 extern void TouchGFX_Task(void *argument);
@@ -103,7 +104,7 @@ extern void TouchGFX_Task(void *argument);
 TaskHandle_t led1_task_handle;
 static void LED_Thread1(void const *argument)
 {
-	
+
   (void) argument;
   //uint32_t PreviousWakeTime = osKernelSysTick();
   static uint8_t cnt = 0;
@@ -316,10 +317,10 @@ int main(void)
   MX_CRC_Init();
   MX_DMA2D_Init();
   MX_LTDC_Init();
-  //MX_FMC_Init();
+//  MX_FMC_Init();
   MX_SDMMC1_SD_Init();
   MX_FATFS_Init();
-  //MX_USART1_UART_Init();
+//  MX_USART1_UART_Init();
   MX_DMA_Init();
   MX_LIBJPEG_Init();
   MX_TouchGFX_Init();
@@ -593,35 +594,35 @@ static void MX_SDMMC1_SD_Init(void)
   * @param None
   * @retval None
   */
-//static void MX_USART1_UART_Init(void)
-//{
+static void MX_USART1_UART_Init(void)
+{
 
-//  /* USER CODE BEGIN USART1_Init 0 */
+  /* USER CODE BEGIN USART1_Init 0 */
 
-//  /* USER CODE END USART1_Init 0 */
+  /* USER CODE END USART1_Init 0 */
 
-//  /* USER CODE BEGIN USART1_Init 1 */
+  /* USER CODE BEGIN USART1_Init 1 */
 
-//  /* USER CODE END USART1_Init 1 */
-//  huart1.Instance = USART1;
-//  huart1.Init.BaudRate = 115200;
-//  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-//  huart1.Init.StopBits = UART_STOPBITS_1;
-//  huart1.Init.Parity = UART_PARITY_NONE;
-//  huart1.Init.Mode = UART_MODE_TX_RX;
-//  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-//  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-//  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-//  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-//  if (HAL_UART_Init(&huart1) != HAL_OK)
-//  {
-//    Error_Handler();
-//  }
-//  /* USER CODE BEGIN USART1_Init 2 */
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
 
-//  /* USER CODE END USART1_Init 2 */
+  /* USER CODE END USART1_Init 2 */
 
-//}
+}
 
 /**
   * Enable DMA controller clock
@@ -700,9 +701,9 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOJ_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOK_CLK_ENABLE();
@@ -752,6 +753,8 @@ static void MX_GPIO_Init(void)
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
+  /* init code for LWIP */
+  MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   for(;;)
