@@ -22,6 +22,7 @@ LR_IROM2 0x90000000 0x00100000  {    ; load region size_region
    *.o (TouchGFX_Framebuffer1)
    *.o (TouchGFX_Framebuffer2)
    *.o (BmpCacheSection)
+   *.o (Ethernet_Buffer)
   }
 }
 

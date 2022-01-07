@@ -34,6 +34,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "stdbool.h"
 #include "string.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -48,7 +49,7 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+#define DEBUG_MSG(...) do { printf(__VA_ARGS__); } while(0)
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

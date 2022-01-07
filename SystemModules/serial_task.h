@@ -12,8 +12,6 @@ extern "C"
 #define SERIAL_TX_BUFFER_SIZE   256
 #define SERIAL_RX_BUFFER_SIZE   256
 
-#define DEBUG_MSG(...) do { _Printf(__VA_ARGS__); } while(0)
-
 void serial_task_start(void);
 
 int serial_putbyte(uint8_t _b);

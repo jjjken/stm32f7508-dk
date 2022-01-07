@@ -30,7 +30,7 @@
 #include "stm32f7508_discovery_sdram.h"
 #include "stm32f7508_discovery.h"
 #include "serial_task.h"
-#include "stdio.h"
+//#include "stdio.h"
 
 /* USER CODE END Includes */
 
@@ -297,11 +297,11 @@ void sd_test(void){
 /**
   * @brief  The application entry point.
   * @retval int
+	* @note		Enabling the DCache will make the DMA fails
   */
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -311,7 +311,7 @@ int main(void)
   SCB_EnableICache();
 
   /* Enable D-Cache---------------------------------------------------------*/
-//  SCB_EnableDCache();
+  SCB_EnableDCache();
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -819,7 +819,7 @@ void MPU_Config(void)
   MPU_InitStruct.Number = MPU_REGION_NUMBER2;
   MPU_InitStruct.Size = MPU_REGION_SIZE_8MB;
   MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-  MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
   MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
