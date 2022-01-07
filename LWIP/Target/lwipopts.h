@@ -30,6 +30,17 @@
 
 /* Within 'USER CODE' section, code will be kept by default at each generation */
 /* USER CODE BEGIN 0 */
+#define NETIF_DEBUG LWIP_DBG_ON
+#define MEMP_DEBUG LWIP_DBG_ON
+#define MEM_DEBUG LWIP_DBG_ON
+#define ICMP_DEBUG LWIP_DBG_ON
+
+#define LWIP_ICMP 1
+#define ICMP_TTL   IP_DEFAULT_TTL
+#define LWIP_BROADCAST_PING 	1
+#define LWIP_MULTICAST_PING   1
+
+#define LWIP_ARP   1
 
 /* USER CODE END 0 */
 
@@ -90,7 +101,7 @@
 /*----- Value in opt.h for RECV_BUFSIZE_DEFAULT: INT_MAX -----*/
 #define RECV_BUFSIZE_DEFAULT 2000000000
 /*----- Value in opt.h for LWIP_STATS: 1 -----*/
-#define LWIP_STATS 0
+#define LWIP_STATS 1
 /*----- Value in opt.h for CHECKSUM_GEN_IP: 1 -----*/
 #define CHECKSUM_GEN_IP 0
 /*----- Value in opt.h for CHECKSUM_GEN_UDP: 1 -----*/

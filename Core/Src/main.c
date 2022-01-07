@@ -30,6 +30,7 @@
 #include "stm32f7508_discovery_sdram.h"
 #include "stm32f7508_discovery.h"
 #include "serial_task.h"
+#include "stdio.h"
 
 /* USER CODE END Includes */
 
@@ -44,6 +45,22 @@ void main_task_start(void);
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+int fputc(int ch, FILE *f){
+ 
+	ITM_SendChar(ch);
+ 
+  return ch;
+}
+
+void ethernetif_notify_conn_changed(struct netif *netif)
+{
+  if(netif_is_link_up(netif)){
+    printf("connected\n");
+  }
+  else{
+    printf("disconnected\n");
+  }
+}
 
 /* USER CODE END PM */
 
@@ -74,7 +91,7 @@ const osThreadAttr_t defaultTask_attributes = {
 osThreadId_t TouchGFXTaskHandle;
 const osThreadAttr_t TouchGFXTask_attributes = {
   .name = "TouchGFXTask",
-  .stack_size = 8192 * 6,
+  .stack_size = 8192 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
@@ -134,7 +151,7 @@ static void LED_Thread1(void const *argument)
     if(cnt++ == 5){
 			
       cnt = 0;
-			
+			//printf("Hello world\n");
 			//sd_test();
     }
   }
@@ -294,7 +311,7 @@ int main(void)
   SCB_EnableICache();
 
   /* Enable D-Cache---------------------------------------------------------*/
-  SCB_EnableDCache();
+//  SCB_EnableDCache();
 
   /* MCU Configuration--------------------------------------------------------*/
 
