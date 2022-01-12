@@ -30,6 +30,7 @@
 #include "stm32f7508_discovery_sdram.h"
 #include "stm32f7508_discovery.h"
 #include "serial_task.h"
+#include "udp_server.h"
 //#include "stdio.h"
 
 /* USER CODE END Includes */
@@ -91,7 +92,7 @@ const osThreadAttr_t defaultTask_attributes = {
 osThreadId_t TouchGFXTaskHandle;
 const osThreadAttr_t TouchGFXTask_attributes = {
   .name = "TouchGFXTask",
-  .stack_size = 8192 * 4,
+  .stack_size = 8192 * 6,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
@@ -297,7 +298,6 @@ void sd_test(void){
 /**
   * @brief  The application entry point.
   * @retval int
-	* @note		Enabling the DCache will make the DMA fails
   */
 int main(void)
 {
@@ -311,7 +311,7 @@ int main(void)
   SCB_EnableICache();
 
   /* Enable D-Cache---------------------------------------------------------*/
-  SCB_EnableDCache();
+  //SCB_EnableDCache();
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -334,10 +334,10 @@ int main(void)
   MX_CRC_Init();
   MX_DMA2D_Init();
   MX_LTDC_Init();
-//  MX_FMC_Init();
+  //MX_FMC_Init();
   MX_SDMMC1_SD_Init();
   MX_FATFS_Init();
-//  MX_USART1_UART_Init();
+  //MX_USART1_UART_Init();
   MX_DMA_Init();
   MX_LIBJPEG_Init();
   MX_TouchGFX_Init();
@@ -773,6 +773,7 @@ void StartDefaultTask(void *argument)
   /* init code for LWIP */
   MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
+	udp_server_init();
   /* Infinite loop */
   for(;;)
   {
@@ -819,7 +820,7 @@ void MPU_Config(void)
   MPU_InitStruct.Number = MPU_REGION_NUMBER2;
   MPU_InitStruct.Size = MPU_REGION_SIZE_8MB;
   MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
   MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
