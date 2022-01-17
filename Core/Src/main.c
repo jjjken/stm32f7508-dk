@@ -31,6 +31,7 @@
 #include "stm32f7508_discovery.h"
 #include "serial_task.h"
 #include "udp_server.h"
+#include "tcp_server.h"
 //#include "stdio.h"
 
 /* USER CODE END Includes */
@@ -774,6 +775,8 @@ void StartDefaultTask(void *argument)
   MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
 	udp_server_init();
+	tcp_server_init();
+	
   /* Infinite loop */
   for(;;)
   {

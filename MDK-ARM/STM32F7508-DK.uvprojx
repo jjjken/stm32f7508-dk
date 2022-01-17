@@ -1412,6 +1412,11 @@
               <FileType>1</FileType>
               <FilePath>..\SystemModules\udp_server.c</FilePath>
             </File>
+            <File>
+              <FileName>tcp_server.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SystemModules\tcp_server.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
